@@ -6,7 +6,7 @@ import { defineConfig, envField } from "astro/config";
 // Web3Fields.astro also fixes up the Web3Forms `redirect` field to the
 // page's real origin on localhost/previews, so this value only matters
 // for visitors with JavaScript disabled.
-const SITE_URL = "https://d-sfixit.drsabbot-f4b.workers.dev";
+const SITE_URL = "https://d-sfixit.drsabbot.workers.dev";
 
 export default defineConfig({
   site: SITE_URL,

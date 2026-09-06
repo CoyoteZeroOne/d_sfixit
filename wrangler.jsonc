@@ -2,7 +2,7 @@
   // Hosting manifest only — this project has no server code (yet).
   // V2 adds a "main" entry here to run a Worker alongside these static files.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "dsfixit",
+  "name": "d-sfixit",
   "compatibility_date": "2026-09-06",
   "assets": {
     "directory": "./dist",
