@@ -1,0 +1,19 @@
+---
+import { site } from "../config/site";
+---
+
+<footer class="statusbar">
+  <span>STATUS: <b>ONLINE</b></span>
+  <span>NODE: {site.brand}</span>
+  <span id="clock">--:--:--</span>
+</footer>
+
+<script>
+  function updateClock() {
+    const el = document.getElementById("clock");
+    if (el)
+      el.textContent = new Date().toLocaleTimeString([], { hour12: false });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>

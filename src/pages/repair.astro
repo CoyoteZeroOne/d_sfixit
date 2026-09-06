@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+import RepairForm from "../components/RepairForm.astro";
+import { site } from "../config/site";
+---
+
+<Base
+  title={`REPAIR DESK // ${site.brand}`}
+  description="Request a repair appointment."
+>
+  <section class="panel">
+    <div class="prompt">&gt; REPAIR.DESK</div>
+    <h1>NEW REPAIR REQUEST</h1>
+    <p class="muted">Tell us what is broken and we'll get back to you.</p>
+    <RepairForm />
+  </section>
+</Base>

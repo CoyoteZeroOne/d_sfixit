@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Calendar from "../../components/Calendar.astro";
+import WorkshopCard from "../../components/WorkshopCard.astro";
+import { site } from "../../config/site";
+import { getUpcoming } from "../../lib/workshops";
+
+const entries = await getCollection("workshops");
+const allWorkshops = entries.map((entry) => entry.data);
+const upcoming = getUpcoming(allWorkshops, site.timeZone);
+---
+
+<Base title={`WORKSHOPS // ${site.brand}`}>
+  <section class="panel">
+    <div class="prompt">&gt; WORKSHOP.SCHEDULE</div>
+    <h1>COMMUNITY WORKSHOPS</h1>
+    <p class="muted">
+      Select a date on the calendar to inspect an event, or browse the list
+      below.
+    </p>
+  </section>
+
+  <Calendar workshops={allWorkshops} />
+
+  <section class="panel">
+    <div class="panel-title">&gt; UPCOMING</div>
+    {
+      upcoming.length ? (
+        upcoming.map((workshop) => <WorkshopCard workshop={workshop} />)
+      ) : (
+        <p class="muted">NO UPCOMING WORKSHOPS SCHEDULED.</p>
+      )
+    }
+  </section>
+</Base>

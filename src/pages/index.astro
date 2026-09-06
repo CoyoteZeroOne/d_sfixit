@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import WorkshopCard from "../components/WorkshopCard.astro";
+import { site } from "../config/site";
+import { getNext } from "../lib/workshops";
+
+const entries = await getCollection("workshops");
+const next = getNext(
+  entries.map((entry) => entry.data),
+  site.timeZone,
+);
+---
+
+<Base title={`${site.brand} // HOME`} description={site.tagline}>
+  <section class="hero panel">
+    <div class="prompt">WELCOME, OPERATOR.</div>
+    <h1>LEARN. FIX. SHARE.</h1>
+    <p class="lede">{site.tagline}</p>
+    <div class="command-row">
+      <a class="button" href="/workshops/">[ WORKSHOPS ]</a>
+      <a class="button" href="/repair/">[ REPAIR DESK ]</a>
+    </div>
+  </section>
+
+  <section class="grid two">
+    <article class="panel">
+      <div class="panel-title">&gt; NEXT WORKSHOP</div>
+      {
+        next ? (
+          <WorkshopCard workshop={next} />
+        ) : (
+          <p class="muted">NO UPCOMING WORKSHOPS SCHEDULED.</p>
+        )
+      }
+      <a class="text-link" href="/workshops/"> VIEW SCHEDULE &gt;&gt; </a>
+    </article>
+    <article class="panel">
+      <div class="panel-title">&gt; REPAIR DESK</div>
+      <p>
+        Bring us something broken, confusing, stubborn, or just plain weird.
+      </p>
+      <p class="muted">
+        We'll help diagnose it, teach you what we can, and decide on the next
+        step together.
+      </p>
+      <a class="button full" href="/repair/"> [ BOOK A REPAIR APPOINTMENT ] </a>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title">{site.aboutHeading}</div>
+    <div class="grid two">
+      <p>{site.aboutPrimary}</p>
+      <p class="muted">{site.aboutSecondary}</p>
+    </div>
+  </section>
+</Base>

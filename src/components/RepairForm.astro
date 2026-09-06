@@ -1,0 +1,74 @@
+---
+import { FORM_ENDPOINTS, FORM_SUBJECTS } from "../config/forms";
+import { isFormsConfigured } from "../lib/env";
+import Web3Fields from "./Web3Fields.astro";
+import FormUnavailable from "./FormUnavailable.astro";
+---
+
+{
+  isFormsConfigured ? (
+    <form class="terminal-form" method="POST" action={FORM_ENDPOINTS.repair}>
+      <label for="item">WHAT NEEDS FIXING?</label>
+      <textarea
+        id="item"
+        name="item"
+        rows={4}
+        required
+        placeholder="> describe the object, problem, symptoms..."
+      />
+
+      <label for="category">CATEGORY</label>
+      <select id="category" name="category">
+        <option>Electronics</option>
+        <option>Small appliance</option>
+        <option>Computer / device</option>
+        <option>Mechanical</option>
+        <option>Textile</option>
+        <option>Other / not sure</option>
+      </select>
+
+      <fieldset>
+        <legend>HOW URGENT?</legend>
+        <div class="choices">
+          <label>
+            <input type="radio" name="urgency" value="normal" checked /> NORMAL
+          </label>
+          <label>
+            <input type="radio" name="urgency" value="soon" /> SOON
+          </label>
+          <label>
+            <input type="radio" name="urgency" value="unsure" /> I HAVE NO IDEA
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="grid two">
+        <div>
+          <label for="name">YOUR NAME</label>
+          <input id="name" name="name" required placeholder="> type here" />
+        </div>
+        <div>
+          <label for="email">EMAIL</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            required
+            placeholder="> name@example.com"
+          />
+        </div>
+      </div>
+
+      <label for="preferred_date">PREFERRED APPOINTMENT DATE</label>
+      <input id="preferred_date" type="date" name="preferred_date" />
+
+      <Web3Fields subject={FORM_SUBJECTS.repair} redirectPath="/thanks/" />
+
+      <button class="button" type="submit">
+        [ SUBMIT REPAIR REQUEST ]
+      </button>
+    </form>
+  ) : (
+    <FormUnavailable />
+  )
+}

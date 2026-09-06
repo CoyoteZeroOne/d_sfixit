@@ -1,0 +1,51 @@
+---
+import { site } from "../config/site";
+
+const links = [
+  { href: "/", label: "HOME" },
+  { href: "/workshops/", label: "WORKSHOPS" },
+  { href: "/repair/", label: "REPAIR" },
+];
+
+const currentPath = Astro.url.pathname;
+const [brandPrefix, ...brandRest] = site.brand.split("_");
+const brandSuffix = brandRest.join("_");
+
+// "/" only matches the home page itself; every other link also matches its
+// subpages (e.g. "/workshops/" stays active on "/workshops/some-workshop/").
+function isActiveLink(href: string, path: string): boolean {
+  return href === "/" ? path === "/" : path.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <a class="brand" href="/">
+    {
+      brandSuffix ? (
+        <>
+          {brandPrefix}
+          <span>_</span>
+          {brandSuffix}
+        </>
+      ) : (
+        site.brand
+      )
+    }
+  </a>
+  <nav aria-label="Main navigation">
+    {
+      links.map((link) => {
+        const active = isActiveLink(link.href, currentPath);
+        return (
+          <a
+            href={link.href}
+            aria-current={active ? "page" : undefined}
+            class={active ? "active" : undefined}
+          >
+            {link.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+</header>

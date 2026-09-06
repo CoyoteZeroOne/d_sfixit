@@ -1,0 +1,13 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../config/site";
+---
+
+<Base title={`404 // ${site.brand}`}>
+  <section class="panel">
+    <div class="prompt">&gt; ERROR.404</div>
+    <h1>PAGE NOT FOUND</h1>
+    <p class="muted">That page doesn't exist on this node.</p>
+    <a class="button" href="/">[ BACK HOME ]</a>
+  </section>
+</Base>

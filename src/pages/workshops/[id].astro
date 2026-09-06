@@ -1,0 +1,63 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import SignupForm from "../../components/SignupForm.astro";
+import StatusTag from "../../components/StatusTag.astro";
+import { site } from "../../config/site";
+import { formatDate, formatTimeRange } from "../../lib/date";
+import type { Workshop } from "../../lib/workshops";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("workshops");
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { workshop: entry.data },
+  }));
+}
+
+interface Props {
+  workshop: Workshop;
+}
+
+const { workshop } = Astro.props as Props;
+---
+
+<Base
+  title={`${workshop.title.toUpperCase()} // ${site.brand}`}
+  description={workshop.description}
+>
+  <section class="panel">
+    <div class="prompt">&gt; WORKSHOP.DETAIL</div>
+    <h1>{workshop.title.toUpperCase()}</h1>
+    <p>
+      <b>DATE:</b>
+      {formatDate(workshop.date)}<br />
+      <b>TIME:</b>
+      {formatTimeRange(workshop.startTime, workshop.endTime)}<br />
+      <b>LOCATION:</b>
+      {workshop.location}<br />
+      <b>CAPACITY:</b>
+      {workshop.capacity}<br />
+      <b>STATUS:</b>
+      <StatusTag status={workshop.status} />
+    </p>
+    <p class="muted">{workshop.description}</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title">&gt; SIGN UP</div>
+    {
+      workshop.status === "open" ? (
+        <SignupForm workshop={workshop} />
+      ) : (
+        <p class="muted">
+          This workshop is currently <StatusTag status={workshop.status} /> and
+          not accepting new signups. Email {site.contactEmail} to ask about
+          openings.
+        </p>
+      )
+    }
+  </section>
+
+  <a class="text-link" href="/workshops/">&lt;&lt; BACK TO SCHEDULE</a>
+</Base>

@@ -1,0 +1,11 @@
+---
+import { STATUS_LABELS } from "../lib/status";
+
+interface Props {
+  status: "open" | "full" | "cancelled";
+}
+
+const { status } = Astro.props;
+---
+
+<span class={`status-tag ${status}`}>{STATUS_LABELS[status]}</span>

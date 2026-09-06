@@ -1,0 +1,48 @@
+---
+import { FORM_ENDPOINTS, FORM_SUBJECTS } from "../config/forms";
+import { isFormsConfigured } from "../lib/env";
+import Web3Fields from "./Web3Fields.astro";
+import FormUnavailable from "./FormUnavailable.astro";
+import type { Workshop } from "../lib/workshops";
+
+interface Props {
+  workshop: Workshop;
+}
+
+const { workshop } = Astro.props;
+---
+
+{
+  isFormsConfigured ? (
+    <form class="terminal-form" method="POST" action={FORM_ENDPOINTS.signup}>
+      <input type="hidden" name="workshop_id" value={workshop.id} />
+      <input type="hidden" name="workshop_title" value={workshop.title} />
+
+      <label for="name">YOUR NAME</label>
+      <input id="name" name="name" required placeholder="> type here" />
+
+      <label for="email">EMAIL</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        required
+        placeholder="> name@example.com"
+      />
+
+      <label for="notes">ANYTHING WE SHOULD KNOW?</label>
+      <textarea id="notes" name="notes" rows={3} placeholder="> optional" />
+
+      <Web3Fields
+        subject={`${FORM_SUBJECTS.signup}: ${workshop.title}`}
+        redirectPath={`/thanks/?w=${workshop.id}`}
+      />
+
+      <button class="button full" type="submit">
+        [ SIGN UP ]
+      </button>
+    </form>
+  ) : (
+    <FormUnavailable />
+  )
+}

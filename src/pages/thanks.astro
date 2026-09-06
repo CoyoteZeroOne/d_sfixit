@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import { site } from "../config/site";
+---
+
+<Base title={`THANKS // ${site.brand}`}>
+  <section class="panel">
+    <div class="prompt">&gt; REQUEST.RECEIVED</div>
+    <h1>REQUEST RECEIVED.</h1>
+    <p id="thanks-body" class="muted">
+      We got your message and will be in touch soon.
+    </p>
+    <a class="text-link" href="/">&lt;&lt; BACK HOME</a>
+  </section>
+</Base>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const workshopId = params.get("w");
+  const body = document.getElementById("thanks-body");
+  if (workshopId && body) {
+    body.textContent =
+      "You're signed up. We'll email you with anything else you need to know before the workshop.";
+  }
+</script>
