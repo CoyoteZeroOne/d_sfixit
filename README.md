@@ -72,7 +72,9 @@ small community site. If you ever outgrow it, Web3Forms has paid tiers, or see t
    `wrangler.jsonc` for the rest).
 4. Add two build environment variables: `NODE_VERSION` = `24`, and
    `PUBLIC_WEB3FORMS_ACCESS_KEY` = your real key from above.
-5. Deploy. You'll get a free `https://dsfixit.<your-account>.workers.dev` URL.
+5. Deploy. You'll get a free `https://<project-name>.<your-account>.workers.dev` URL. (The
+   project name Cloudflare uses comes from what you name the project when importing it in the
+   dashboard — it doesn't have to match `wrangler.jsonc`.)
 6. Open `astro.config.mjs` and change `SITE_URL` to that real URL, then commit and push. (Until you
    do this, forms still work — a small script fixes the redirect at runtime — but it's worth
    tidying up so build-time links are correct too.)
