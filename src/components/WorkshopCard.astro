@@ -1,0 +1,23 @@
+---
+import { formatDate, formatTimeRange } from "../lib/date";
+import StatusTag from "./StatusTag.astro";
+import type { Workshop } from "../lib/workshops";
+
+interface Props {
+  workshop: Workshop;
+}
+
+const { workshop } = Astro.props;
+---
+
+<article class="terminal-card">
+  <strong>{workshop.title.toUpperCase()}</strong>
+  <div>
+    {formatDate(workshop.date)} // {
+      formatTimeRange(workshop.startTime, workshop.endTime)
+    }
+  </div>
+  <div>{workshop.location}</div>
+  <div><StatusTag status={workshop.status} /></div>
+  <a class="text-link" href={`/workshops/${workshop.id}/`}>VIEW &gt;&gt;</a>
+</article>

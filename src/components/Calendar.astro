@@ -1,0 +1,66 @@
+---
+import { site } from "../config/site";
+import { todayISO } from "../lib/date";
+import type { Workshop } from "../lib/workshops";
+
+interface Props {
+  workshops: Workshop[];
+}
+
+const { workshops } = Astro.props;
+
+const calendarEvents = workshops.map((workshop) => ({
+  id: workshop.id,
+  title: workshop.title,
+  date: workshop.date,
+  startTime: workshop.startTime,
+  endTime: workshop.endTime,
+  location: workshop.location,
+  status: workshop.status,
+  url: `/workshops/${workshop.id}/`,
+}));
+
+// Seed the calendar's initial month from the site's configured time zone, not
+// the visitor's browser clock — kept consistent with how "upcoming" is
+// computed at build time (see src/lib/date.ts).
+const calendarPayload = {
+  today: todayISO(site.timeZone),
+  events: calendarEvents,
+};
+---
+
+<section class="calendar-wrap panel">
+  <div class="calendar-head">
+    <button
+      class="icon-button"
+      id="prev-month"
+      aria-label="Previous month"
+      type="button">&lt;</button
+    >
+    <h2 id="month-label">MONTH</h2>
+    <button
+      class="icon-button"
+      id="next-month"
+      aria-label="Next month"
+      type="button">&gt;</button
+    >
+  </div>
+  <div id="calendar" class="calendar" aria-label="Workshop calendar"></div>
+</section>
+
+<section class="panel">
+  <div class="panel-title">&gt; EVENT.INFO</div>
+  <div id="event-output" class="muted">SELECT A WORKSHOP DATE.</div>
+</section>
+
+<script
+  type="application/json"
+  id="workshop-data"
+  is:inline
+  set:html={JSON.stringify(calendarPayload).replace(/</g, "\\u003c")}
+/>
+
+<script>
+  import { initCalendar } from "../scripts/calendar";
+  initCalendar("calendar", "month-label", "event-output", "workshop-data");
+</script>

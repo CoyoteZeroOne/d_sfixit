@@ -1,0 +1,42 @@
+---
+import { site } from "../config/site";
+import { web3FormsAccessKey } from "../lib/env";
+
+interface Props {
+  subject: string;
+  redirectPath: string;
+  fromName?: string;
+}
+
+const {
+  subject,
+  redirectPath,
+  fromName = `${site.brand.replace(/_/g, " ")} website`,
+} = Astro.props;
+const redirectHref = new URL(redirectPath, Astro.site).href;
+---
+
+<input type="hidden" name="access_key" value={web3FormsAccessKey} />
+<input type="hidden" name="subject" value={subject} />
+<input type="hidden" name="from_name" value={fromName} />
+<input type="hidden" name="redirect" id="w3f-redirect" value={redirectHref} />
+<input
+  type="checkbox"
+  name="botcheck"
+  class="hp-field"
+  tabindex="-1"
+  autocomplete="off"
+  aria-hidden="true"
+/>
+
+<script>
+  // Web3Forms requires an absolute redirect URL. `Astro.site` is fixed at
+  // build time, so this rewrites it to the page's real origin — this makes
+  // localhost and Cloudflare preview deployments redirect correctly too,
+  // without needing a rebuild for every environment.
+  const redirectField = document.getElementById("w3f-redirect");
+  if (redirectField instanceof HTMLInputElement) {
+    const target = new URL(redirectField.value);
+    redirectField.value = location.origin + target.pathname + target.search;
+  }
+</script>

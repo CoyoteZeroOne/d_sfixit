@@ -1,29 +1,35 @@
 [
   {
-    "date": "2026-09-19",
+    "id": "basic-soldering",
     "title": "Basic Soldering",
-    "time": "14:00–16:00",
+    "date": "2026-09-19",
+    "startTime": "14:00",
+    "endTime": "16:00",
     "location": "Community Workshop",
     "capacity": 12,
-    "available": 8,
+    "status": "open",
     "description": "Learn soldering basics, tool safety, and simple electronic repairs."
   },
   {
-    "date": "2026-09-26",
+    "id": "fix-your-small-appliance",
     "title": "Fix Your Small Appliance",
-    "time": "13:00–15:30",
+    "date": "2026-09-26",
+    "startTime": "13:00",
+    "endTime": "15:30",
     "location": "Community Workshop",
     "capacity": 10,
-    "available": 4,
+    "status": "open",
     "description": "A hands-on introduction to diagnosing common small-appliance problems."
   },
   {
-    "date": "2026-10-03",
+    "id": "intro-to-multimeters",
     "title": "Intro to Multimeters",
-    "time": "14:00–16:00",
+    "date": "2026-10-03",
+    "startTime": "14:00",
+    "endTime": "16:00",
     "location": "Community Workshop",
     "capacity": 12,
-    "available": 10,
+    "status": "open",
     "description": "Learn voltage, continuity, resistance, and how to approach a mystery circuit."
   }
 ]
