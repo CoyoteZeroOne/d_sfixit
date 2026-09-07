@@ -13,7 +13,7 @@ export const site = {
   aboutSecondary:
     "This site is how I handle my repair queue and workshop calendar. Leave me a note here describing your repair issue, and keep an eye out here for community fixit workshops, hackathons, and tech talks.",
   location: "Community Workshop",
-  contactEmail: "hello@example.com",
+  contactEmail: "dsfixit01@gmail.com",
 
   /**
    * IANA time zone used to decide what "today" and "upcoming" mean when the
