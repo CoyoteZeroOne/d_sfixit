@@ -8,11 +8,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "dev:worker": "astro build && wrangler dev",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "types": "wrangler types",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
