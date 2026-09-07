@@ -1,11 +1,26 @@
 {
-  // Hosting manifest only — this project has no server code (yet).
-  // V2 adds a "main" entry here to run a Worker alongside these static files.
+  // Static site + one small Worker route for repair-photo uploads.
+  // Everything except /api/* is served as a static file with no Worker
+  // involvement at all (default routing behavior).
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "d-sfixit",
   "compatibility_date": "2026-09-06",
+  "main": "src/worker/index.ts",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"],
+  },
+  "r2_buckets": [
+    {
+      "binding": "REPAIR_PHOTOS",
+      // Create with: npx wrangler r2 bucket create d-sfixit-repair-photos
+      "bucket_name": "d-sfixit-repair-photos",
+    },
+  ],
+  "vars": {
+    // Set after creating the bucket and enabling Public Access on it (see
+    // README) — Cloudflare assigns this URL, it can't be predicted in advance.
+    "R2_PUBLIC_URL_BASE": "https://REPLACE-ME.r2.dev",
   },
 }

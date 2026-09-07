@@ -328,6 +328,17 @@ textarea {
   accent-color: var(--accent);
 }
 
+.photo-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--dim);
+}
+.photo-list li {
+  padding: 3px 0;
+}
+
 /* Web3Forms spam-trap field: real users never see or fill this in. */
 .hp-field {
   position: absolute;

@@ -1,4 +1,5 @@
 import { formatDate, formatTimeRange } from "../lib/date";
+import { escapeHtml } from "../lib/escapeHtml";
 import { STATUS_LABELS } from "../lib/status";
 
 interface CalendarEvent {
@@ -143,12 +144,4 @@ function parseInitialViewDate(todayIso: string | undefined): Date {
   const [year, month, day] = todayIso.split("-").map(Number);
   if (!year || !month || !day) return new Date();
   return new Date(year, month - 1, day);
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }

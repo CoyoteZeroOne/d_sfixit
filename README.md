@@ -12,7 +12,8 @@ Cloudflare, forms handled by [Web3Forms](https://web3forms.com) (also free).
 3. `npm run dev` — opens the site at `http://localhost:4321` with live reload.
 
 Forms won't actually send anywhere locally unless you've set a Web3Forms key — see below. Without
-one, the site still builds and runs; the forms just show a "FORM OFFLINE" notice instead.
+one, the site still builds and runs; the forms just show a "FORM OFFLINE" notice instead. Testing
+repair-photo uploads locally needs `npm run dev:worker` instead — see "Repair photo uploads" below.
 
 ## Before you touch anything: check the site text
 
@@ -63,6 +64,32 @@ notice automatically.
 Free tier is 250 form submissions a month combined across both forms, which comfortably covers a
 small community site. If you ever outgrow it, Web3Forms has paid tiers, or see the V2 roadmap below.
 
+## Repair photo uploads
+
+The repair form lets customers attach up to 5 photos (JPEG, PNG, GIF, WEBP, or HEIC, 8MB each).
+Web3Forms' free tier doesn't support file attachments at all, so uploads are handled by a small
+Cloudflare Worker instead: the browser uploads each photo straight to `/api/upload-photo`, which
+stores it in a Cloudflare R2 bucket (free, 10GB) and hands back a link; that link is what actually
+travels to Web3Forms and shows up in the email, as regular text, not an attachment.
+
+One-time setup, after the site is connected to Cloudflare (see below):
+
+1. `npx wrangler login` once, if you haven't already.
+2. `npx wrangler r2 bucket create d-sfixit-repair-photos` (matches the `bucket_name` in
+   `wrangler.jsonc` — change both if you'd rather use a different name).
+3. In the Cloudflare dashboard: open the bucket → Settings → Public Access → enable it. Cloudflare
+   gives you a `https://pub-xxxxxxxx.r2.dev` URL.
+4. Put that URL in `wrangler.jsonc` as `R2_PUBLIC_URL_BASE` (replacing the placeholder), run
+   `npm run types` to regenerate the TypeScript types that reference it, then commit and push.
+
+To test uploads locally: `npm run dev:worker` instead of the usual `npm run dev` — it runs the site
+and the Worker together (against a local, fake R2 bucket, so nothing real gets uploaded until it's
+actually deployed).
+
+Uploaded photos are publicly reachable by anyone who has the exact link (the link itself is an
+unguessable random ID, but nothing else gates access). Fine for photos of a broken toaster; worth
+knowing if that ever changes.
+
 ## Connecting the repo to Cloudflare
 
 1. Create a free Cloudflare account (no credit card required).
@@ -90,11 +117,13 @@ Cloudflare issues the certificate automatically.
 
 ## What's deliberately not here (V2 roadmap)
 
-This is a "V1": no backend code, no database. It ships fast and costs nothing, at the price of
-manual capacity tracking. If that becomes annoying, the natural next step ("V2") is:
+This started as "V1": no backend code, no database, just a static site plus Web3Forms. There's now
+one small Worker (photo uploads, see above), but still no database and no capacity enforcement — a
+workshop still fills up when someone notices and flips its `status` by hand, not automatically. If
+that becomes annoying, the natural next step ("V2") is:
 
-- Add a Cloudflare Worker + D1 (a small free SQLite database) to this same project.
-- Point `FORM_ENDPOINTS` in `src/config/forms.ts` at the new Worker routes instead of Web3Forms.
+- Add a D1 database (free SQLite) to the existing Worker.
+- Point `FORM_ENDPOINTS` in `src/config/forms.ts` at new Worker routes instead of Web3Forms.
 - The Worker checks each workshop's real signup count against its `capacity` and rejects
   over-capacity signups server-side, instead of relying on someone noticing and flipping `status`.
 

@@ -1,5 +1,6 @@
 ---
 import { FORM_ENDPOINTS, FORM_SUBJECTS } from "../config/forms";
+import { site } from "../config/site";
 import { isFormsConfigured } from "../lib/env";
 import Web3Fields from "./Web3Fields.astro";
 import FormUnavailable from "./FormUnavailable.astro";
@@ -62,6 +63,23 @@ import FormUnavailable from "./FormUnavailable.astro";
       <label for="preferred_date">PREFERRED APPOINTMENT DATE</label>
       <input id="preferred_date" type="date" name="preferred_date" />
 
+      <label for="repair-photos">PHOTOS (OPTIONAL, UP TO 5)</label>
+      <input
+        id="repair-photos"
+        type="file"
+        accept="image/jpeg,image/png,image/gif,image/webp,image/heic,image/heif"
+        multiple
+      />
+      <ul id="repair-photo-list" class="photo-list" />
+      <input type="hidden" id="repair-photo-urls" name="photo_urls" />
+      <noscript>
+        <p class="muted">
+          Photo attachments need JavaScript. Feel free to email photos to{" "}
+          {site.contactEmail}
+          instead.
+        </p>
+      </noscript>
+
       <Web3Fields subject={FORM_SUBJECTS.repair} redirectPath="/thanks/" />
 
       <button class="button" type="submit">
@@ -72,3 +90,8 @@ import FormUnavailable from "./FormUnavailable.astro";
     <FormUnavailable />
   )
 }
+
+<script>
+  import { initPhotoUpload } from "../scripts/repairPhotoUpload";
+  initPhotoUpload("repair-photos", "repair-photo-urls", "repair-photo-list");
+</script>
