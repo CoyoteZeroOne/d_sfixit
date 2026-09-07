@@ -1,131 +1,62 @@
 # d_sfixit
 
-Community workshop + repair desk website. Built with [Astro](https://astro.build), hosted free on
-Cloudflare, forms handled by [Web3Forms](https://web3forms.com) (also free).
+Community workshop + repair desk website. Astro, hosted free on Cloudflare, forms via
+[Web3Forms](https://web3forms.com).
 
 ## Local dev
 
-1. Install [Node.js 24](https://nodejs.org) (the `.node-version` file pins this — tools like `nvm`
-   or `fnm` will pick it up automatically).
-2. `npm install` — this also sets up a Git hook that auto-formats and lints your changes when you
-   commit, so you don't have to think about it.
-3. `npm run dev` — opens the site at `http://localhost:4321` with live reload.
+1. Install [Node.js 24](https://nodejs.org) (`.node-version` pins this).
+2. `npm install` — also installs a pre-commit hook that formats and lints automatically.
+3. `npm run dev` — `http://localhost:4321`, live reload.
 
-Forms won't actually send anywhere locally unless you've set a Web3Forms key — see below. Without
-one, the site still builds and runs; the forms just show a "FORM OFFLINE" notice instead. Testing
-repair-photo uploads locally needs `npm run dev:worker` instead — see "Repair photo uploads" below.
+Without a Web3Forms key in `.env`, forms show "FORM OFFLINE" instead of failing the build. Testing
+photo uploads needs `npm run dev:worker` instead — runs the site and the Worker together, against a
+local fake bucket, nothing real gets touched.
 
-## Before you touch anything: check the site text
+## Everyday edits
 
-Open `src/config/site.ts`. That one file has the brand name, tagline, about text, location, contact
-email, and — importantly — **`timeZone`**. Set `timeZone` to wherever the workshops actually happen
-(e.g. `"America/Chicago"`); it's used to decide what "today" and "upcoming" mean. The default is
-`"America/New_York"`.
+**Site text** (brand, tagline, about, contact email, time zone) — one file, `src/config/site.ts`.
 
-## Adding a workshop
+**Workshops** — `src/data/workshops.json`, an array. Copy an entry and edit it:
 
-Open `src/data/workshops.json`. It's an array — copy one of the existing entries and change the
-values. Fields:
+| Field                   | Meaning                                                                                                                                                          |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                    | Unique lowercase slug, e.g. `basic-soldering` — becomes the URL. Duplicates silently drop one entry instead of failing the build, so double-check after copying. |
+| `date`                  | `YYYY-MM-DD`                                                                                                                                                     |
+| `startTime` / `endTime` | 24-hour `HH:MM`                                                                                                                                                  |
+| `capacity`              | Shown on the page, informational only — nothing counts real signups yet.                                                                                         |
+| `status`                | `open`, `full`, or `cancelled` — flip this by hand once a workshop fills up.                                                                                     |
 
-| Field                   | Meaning                                                                                                                                                                                                                                                                                                                                                                                         |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                    | A short, unique, lowercase, hyphenated slug, e.g. `"basic-soldering"`. This becomes part of the URL (`/workshops/basic-soldering/`). **Must be unique** — if you copy-paste an entry as a template for a new workshop, don't forget to change this. Two entries with the same `id` won't fail the build; one of them will just silently disappear from the site, so double-check after copying. |
-| `title`                 | Shown everywhere as-is.                                                                                                                                                                                                                                                                                                                                                                         |
-| `date`                  | `YYYY-MM-DD`, e.g. `"2026-09-19"`.                                                                                                                                                                                                                                                                                                                                                              |
-| `startTime` / `endTime` | 24-hour `HH:MM`, e.g. `"14:00"` and `"16:00"`.                                                                                                                                                                                                                                                                                                                                                  |
-| `location`              | Free text.                                                                                                                                                                                                                                                                                                                                                                                      |
-| `capacity`              | A number, shown on the page. **This is informational only** — the site doesn't count signups automatically (see "Marking a workshop full" below and the V2 roadmap).                                                                                                                                                                                                                            |
-| `status`                | `"open"`, `"full"`, or `"cancelled"`.                                                                                                                                                                                                                                                                                                                                                           |
-| `description`           | A sentence or two.                                                                                                                                                                                                                                                                                                                                                                              |
-
-Save, commit, push — Cloudflare rebuilds the live site automatically within a minute or two.
-
-A workshop disappears from the "upcoming" list once its date has passed — but only the next time the
-site rebuilds. If nobody pushes anything for a while, push an empty commit or use Cloudflare's
-dashboard to trigger a manual redeploy to refresh the list.
-
-## Marking a workshop full or cancelled
-
-There's no live signup count in V1 — you'll know it's full because you're getting sign-up emails.
-When it is, change that workshop's `"status"` in `workshops.json` to `"full"` (or `"cancelled"` if
-it's not happening), commit, and push. The signup form on that workshop's page is replaced with a
-notice automatically.
-
-## Setting up the Web3Forms key
-
-1. Go to [web3forms.com](https://web3forms.com) and get a free access key (just an email address,
-   no account needed).
-2. **Locally:** copy `.env.example` to `.env` and paste the key in.
-3. **On the live site:** add it as a build environment variable in the Cloudflare dashboard (see
-   below) — never commit the real key to `.env`, since that file is git-ignored on purpose. (The key
-   itself isn't a secret in the security sense — it's embedded in the page's HTML by design — but
-   keeping it out of the repo means you can rotate it without a code change.)
-
-Free tier is 250 form submissions a month combined across both forms, which comfortably covers a
-small community site. If you ever outgrow it, Web3Forms has paid tiers, or see the V2 roadmap below.
+Push to deploy. A workshop drops off "upcoming" once its date passes, but only at the next rebuild
+— push an empty commit or use Cloudflare's dashboard to force one if nothing else has landed in a
+while.
 
 ## Repair photo uploads
 
-The repair form lets customers attach up to 5 photos (JPEG, PNG, GIF, WEBP, or HEIC, 8MB each).
-Web3Forms' free tier doesn't support file attachments at all, so uploads are handled by a small
-Cloudflare Worker instead: the browser uploads each photo straight to `/api/upload-photo`, which
-stores it in a Cloudflare R2 bucket (free, 10GB) and hands back a link; that link is what actually
-travels to Web3Forms and shows up in the email, as regular text, not an attachment.
+Up to 5 photos per repair request (JPEG/PNG/GIF/WEBP/HEIC, 8MB each). Web3Forms' free tier can't
+handle attachments, so uploads go through a small Cloudflare Worker (`src/worker/`) that stores
+them in a free R2 bucket and hands Web3Forms a link instead of a file. Uploaded photos are
+reachable by anyone with the exact link (an unguessable random ID, nothing else gates access) —
+fine for a photo of a broken toaster, worth knowing if that ever changes.
 
-One-time setup, after the site is connected to Cloudflare (see below):
+## One-time setup (already done for this site)
 
-1. `npx wrangler login` once, if you haven't already.
-2. `npx wrangler r2 bucket create d-sfixit-repair-photos` (matches the `bucket_name` in
-   `wrangler.jsonc` — change both if you'd rather use a different name).
-3. In the Cloudflare dashboard: open the bucket → Settings → Public Access → enable it. Cloudflare
-   gives you a `https://pub-xxxxxxxx.r2.dev` URL.
-4. Put that URL in `wrangler.jsonc` as `R2_PUBLIC_URL_BASE` (replacing the placeholder), run
-   `npm run types` to regenerate the TypeScript types that reference it, then commit and push.
+Kept here for reference — a new Cloudflare account or a fresh clone would need all of this again.
 
-To test uploads locally: `npm run dev:worker` instead of the usual `npm run dev` — it runs the site
-and the Worker together (against a local, fake R2 bucket, so nothing real gets uploaded until it's
-actually deployed).
+- **Web3Forms**: free key from web3forms.com. Locally in `.env`; on Cloudflare as the
+  `PUBLIC_WEB3FORMS_ACCESS_KEY` build variable.
+- **Cloudflare**: Workers & Pages → Import a repository → build command `npm run build` → add
+  `NODE_VERSION=24` and the Web3Forms key as build variables → deploy. Afterward, set `SITE_URL` in
+  `astro.config.mjs` to the real URL Cloudflare assigns.
+- **R2 bucket for photos**: `npx wrangler r2 bucket create d-sfixit-repair-photos`, enable Public
+  Access on it in the dashboard, put the resulting `pub-xxxxxxxx.r2.dev` URL into `wrangler.jsonc`
+  as `R2_PUBLIC_URL_BASE`, then run `npm run types`.
+- **Custom domain** (optional, still free): buy one anywhere, point its DNS at Cloudflare, add it
+  as a custom domain on the Workers project.
 
-Uploaded photos are publicly reachable by anyone who has the exact link (the link itself is an
-unguessable random ID, but nothing else gates access). Fine for photos of a broken toaster; worth
-knowing if that ever changes.
+## V2 roadmap
 
-## Connecting the repo to Cloudflare
-
-1. Create a free Cloudflare account (no credit card required).
-2. Dashboard → Workers & Pages → Create → Import a repository → pick this repo, authorize
-   Cloudflare's GitHub app.
-3. Build command: `npm run build`. Deploy command: leave as suggested (Cloudflare reads
-   `wrangler.jsonc` for the rest).
-4. Add two build environment variables: `NODE_VERSION` = `24`, and
-   `PUBLIC_WEB3FORMS_ACCESS_KEY` = your real key from above.
-5. Deploy. You'll get a free `https://<project-name>.<your-account>.workers.dev` URL. (The
-   project name Cloudflare uses comes from what you name the project when importing it in the
-   dashboard — it doesn't have to match `wrangler.jsonc`.)
-6. Open `astro.config.mjs` and change `SITE_URL` to that real URL, then commit and push. (Until you
-   do this, forms still work — a small script fixes the redirect at runtime — but it's worth
-   tidying up so build-time links are correct too.)
-
-Every pull request also gets its own preview URL automatically, so you can see a change live before
-merging it into `main`.
-
-## Custom domain (optional, still free)
-
-Buy a domain anywhere (Cloudflare Registrar sells at cost, no markup, ~$10/year for a `.com`). Point
-its DNS at Cloudflare, then in the Workers & Pages project settings, add it as a custom domain.
-Cloudflare issues the certificate automatically.
-
-## What's deliberately not here (V2 roadmap)
-
-This started as "V1": no backend code, no database, just a static site plus Web3Forms. There's now
-one small Worker (photo uploads, see above), but still no database and no capacity enforcement — a
-workshop still fills up when someone notices and flips its `status` by hand, not automatically. If
-that becomes annoying, the natural next step ("V2") is:
-
-- Add a D1 database (free SQLite) to the existing Worker.
-- Point `FORM_ENDPOINTS` in `src/config/forms.ts` at new Worker routes instead of Web3Forms.
-- The Worker checks each workshop's real signup count against its `capacity` and rejects
-  over-capacity signups server-side, instead of relying on someone noticing and flipping `status`.
-
-Because the form field names were chosen to match what that Worker would expect, this upgrade is a
-change to `forms.ts` and a new Worker file — not a rewrite of the site.
+No database yet — a workshop fills up by someone flipping `status` by hand. If that gets old: add
+a D1 database to the existing Worker, and point `FORM_ENDPOINTS` (`src/config/forms.ts`) at new
+Worker routes instead of Web3Forms, which then reject over-capacity signups automatically. Form
+field names already match what that Worker would expect, so it's an addition, not a rewrite.
