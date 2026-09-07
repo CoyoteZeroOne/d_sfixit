@@ -6,8 +6,7 @@ export const site = {
   // An underscore marks where the blinking terminal cursor appears, e.g.
   // "Ds_FIXIT" renders as Ds[blinking _]FIXIT.
   brand: "Ds_FIXIT",
-  tagline:
-    "This is where THE MACHINE comes to DIE and BE REBORN",
+  tagline: "This is where THE MACHINE comes to DIE and BE REBORN",
   aboutHeading: "> ABOUT THIS NODE",
   aboutPrimary:
     "Teaching tech to all-comers! No skill? No judgement. Learn to fix your own shit with friends, or leave it on my desk for a no-cost repair.",
@@ -21,5 +20,5 @@ export const site = {
    * site is built (e.g. "America/New_York", "America/Chicago", "America/Los_Angeles").
    * Find yours at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
    */
-  timeZone: "America/Minneapolis",
+  timeZone: "America/Chicago",
 } as const;
