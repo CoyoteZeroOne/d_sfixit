@@ -4,15 +4,15 @@
  */
 export const site = {
   // An underscore marks where the blinking terminal cursor appears, e.g.
-  // "COMMUNITY_NODE" renders as COMMUNITY[blinking _]NODE.
-  brand: "COMMUNITY_NODE",
+  // "Ds_FIXIT" renders as Ds[blinking _]FIXIT.
+  brand: "Ds_FIXIT",
   tagline:
-    "A community workshop for making things work again — and learning how they work in the first place.",
+    "This is where THE MACHINE comes to DIE and BE REBORN",
   aboutHeading: "> ABOUT THIS NODE",
   aboutPrimary:
-    "Community-led workshops. Shared tools. Repair skills. No gatekeeping.",
+    "Teaching tech to all-comers! No skill? No judgement. Learn to fix your own shit with friends, or leave it on my desk for a no-cost repair.",
   aboutSecondary:
-    "This site is intentionally simple: a small public interface backed by services that handle registration and appointments.",
+    "This site is how I handle my repair queue and workshop calendar. Leave me a note here describing your repair issue, and keep an eye out here for community fixit workshops, hackathons, and tech talks.",
   location: "Community Workshop",
   contactEmail: "hello@example.com",
 
@@ -21,5 +21,5 @@ export const site = {
    * site is built (e.g. "America/New_York", "America/Chicago", "America/Los_Angeles").
    * Find yours at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
    */
-  timeZone: "America/New_York",
+  timeZone: "America/Minneapolis",
 } as const;
