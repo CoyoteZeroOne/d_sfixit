@@ -1,0 +1,42 @@
+name: Format Code with Prettier
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+
+    # Essential permission needed so the action can push changes back to the repo
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Check out the code under the specific branch/pull request context
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref }}
+
+      # 2. Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      # 3. Install dependencies (Prettier must be in your package.json)
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Run Prettier with --write to automatically fix files
+      - name: Run Prettier Fix
+        run: npx prettier --write .
+
+      # 5. Commit and push changes back if Prettier modified any files
+      - name: Check and Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: format code with Prettier"
