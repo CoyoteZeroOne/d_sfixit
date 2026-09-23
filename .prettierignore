@@ -3,3 +3,6 @@ dist/
 node_modules/
 package-lock.json
 .wrangler/
+# GitHub blocks Actions bots from pushing changes to workflow files unless
+# granted extra permission — never let the auto-format workflow touch these.
+.github/workflows/
