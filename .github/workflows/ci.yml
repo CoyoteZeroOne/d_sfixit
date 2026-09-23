@@ -17,6 +17,10 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run lint
+      # Cosmetic only — a formatting nit (e.g. an edit made through the GitHub
+      # web UI, which skips the local pre-commit hook) shouldn't fail the
+      # build. Still runs and still visible in the log, just non-blocking.
       - run: npm run format:check
+        continue-on-error: true
       - run: npm run test
       - run: npm run build
