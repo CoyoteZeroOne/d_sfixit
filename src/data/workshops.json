@@ -1,14 +1,14 @@
 [
   {
-    "id": "basic-soldering",
-    "title": "Basic Soldering",
-    "date": "2026-09-19",
+    "id": "tech-teardown-1",
+    "title": "Tech Teardown 1",
+    "date": "2026-10-11",
     "startTime": "14:00",
     "endTime": "16:00",
     "location": "Community Workshop",
     "capacity": 12,
     "status": "open",
-    "description": "Learn soldering basics, tool safety, and simple electronic repairs."
+    "description": "Learn the tools and gestures of the cyberpunk- bring your own tools and devices, or don't! We have plenty. Come take stuff apart and don't worry aboout putting it back together."
   },
   {
     "id": "fix-your-small-appliance",
