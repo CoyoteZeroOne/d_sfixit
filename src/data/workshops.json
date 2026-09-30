@@ -11,15 +11,15 @@
     "description": "Learn the tools and gestures of the cyberpunk- bring your own tools and devices, or don't! We have plenty. Come take stuff apart and don't worry aboout putting it back together."
   },
   {
-    "id": "fix-your-small-appliance",
-    "title": "Fix Your Small Appliance",
-    "date": "2026-09-26",
+    "id": "FDN-11010-intro-to-hacking",
+    "title": "FDN 11010 Intro to Hacking",
+    "date": "2026-10-16",
     "startTime": "13:00",
     "endTime": "15:30",
     "location": "Community Workshop",
-    "capacity": 10,
+    "capacity": 12,
     "status": "open",
-    "description": "A hands-on introduction to diagnosing common small-appliance problems."
+    "description": "Welcome, students, to your first [VARIABLE UNDEFINED] class. Here we will be having fun, sharing in the tradition of phreaks and g33ks the whole world over, pooling knowledge and learning how to reach into the nether world of software with a pair of boltcutters in hand. Come have fun with us!"
   },
   {
     "id": "intro-to-multimeters",
