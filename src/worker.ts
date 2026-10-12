@@ -4,8 +4,7 @@
 // receiptText and receiptHtml near the bottom of this file.
 import rawWorkshops from "./data/workshops.json";
 import { site } from "./config/site";
-import { todayISO } from "./lib/date";
-import type { Workshop } from "./lib/workshops";
+import { hasEnded, type Workshop } from "./lib/workshops";
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
@@ -28,8 +27,9 @@ const workshopList = rawWorkshops as Workshop[];
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    if (url.pathname !== "/api/signup") return env.ASSETS.fetch(request);
-    return handleSignup(request, env, url);
+    if (url.pathname === "/api/signup") return handleSignup(request, env, url);
+    if (url.pathname.startsWith("/api/")) return response("Not found.", 404);
+    return env.ASSETS.fetch(request);
   },
 };
 
@@ -56,7 +56,8 @@ async function handleSignup(
   const workshopId = String(form.get("workshop_id") ?? "").trim();
   if (
     !name ||
-    name.length > 120 ||
+    name.length > 60 ||
+    !isPlainName(name) ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     email.length > 254
   ) {
@@ -69,14 +70,14 @@ async function handleSignup(
   if (!workshop) return response("That workshop could not be found.", 404);
   if (workshop.status !== "open")
     return response("This workshop is no longer accepting signups.", 409);
-  if (workshop.date < todayISO(site.timeZone))
+  if (hasEnded(workshop, site.timeZone))
     return response("This workshop has already happened.", 409);
   if (!env.RESEND_API_KEY || !env.EMAIL_FROM || !env.TURNSTILE_SECRET_KEY)
     return response(
       "Signup email is not configured yet. Please contact the site owner.",
       503,
     );
-  if (!(await passesTurnstile(form, request, env.TURNSTILE_SECRET_KEY)))
+  if (!(await passesTurnstile(form, request, url, env.TURNSTILE_SECRET_KEY)))
     return response(
       "We couldn't confirm you're a person. Go back, reload the page, and try again.",
       403,
@@ -95,7 +96,7 @@ async function handleSignup(
   });
   if (!notified)
     return response(
-      `We couldn't submit your signup. Please try again or email ${site.contactEmail}.`,
+      `We couldn't submit your signup. Go back, reload the page, and try again, or email ${site.contactEmail}.`,
       502,
     );
 
@@ -115,12 +116,20 @@ async function handleSignup(
 
 function isSameOrigin(origin: string | null, url: URL): boolean {
   if (!origin) return true;
-  return URL.canParse(origin) && new URL(origin).host === url.host;
+  return URL.canParse(origin) && new URL(origin).origin === url.origin;
+}
+
+// The name is the only text the submitter controls in the receipt, and the
+// receipt goes to whatever address was typed, so it can't carry a link, a
+// phone number or extra lines. "J.R. Smith" passes; "evil.co" does not.
+function isPlainName(name: string): boolean {
+  return !/[\d/:@\p{Cc}]/u.test(name) && !/\p{L}\.\p{L}{2}/u.test(name);
 }
 
 async function passesTurnstile(
   form: FormData,
   request: Request,
+  url: URL,
   secret: string,
 ): Promise<boolean> {
   const token = String(form.get("cf-turnstile-response") ?? "");
@@ -135,11 +144,27 @@ async function passesTurnstile(
     );
     const outcome = (await result.json()) as {
       success?: boolean;
+      hostname?: string;
       "error-codes"?: string[];
+      metadata?: { result_with_testing_key?: boolean };
     };
-    if (!outcome.success)
+    if (outcome.success !== true) {
       console.error("Turnstile rejected signup", outcome["error-codes"]);
-    return outcome.success === true;
+      return false;
+    }
+    // Cloudflare's test secrets always report "example.com" and accept their
+    // dummy token from anywhere, so checking them would only break local testing.
+    if (
+      !outcome.metadata?.result_with_testing_key &&
+      outcome.hostname !== url.hostname
+    ) {
+      console.error(
+        "Turnstile token was solved on another site",
+        outcome.hostname,
+      );
+      return false;
+    }
+    return true;
   } catch (error) {
     console.error("Turnstile verification failed", error);
     return false;

@@ -1,5 +1,6 @@
 ---
 import { FORM_ENDPOINTS, FORM_SUBJECTS } from "../config/forms";
+import { site } from "../config/site";
 import {
   isFormsConfigured,
   isSignupViaWorker,
@@ -21,6 +22,7 @@ const { workshop } = Astro.props;
   isSignupViaWorker || isFormsConfigured ? (
     <form
       class="terminal-form"
+      data-signup-form
       method="POST"
       action={
         isSignupViaWorker ? FORM_ENDPOINTS.signupWorker : FORM_ENDPOINTS.signup
@@ -52,6 +54,12 @@ const { workshop } = Astro.props;
             data-sitekey={turnstileSiteKey}
             data-theme="dark"
           />
+          <noscript>
+            <p class="muted">
+              Signing up here needs JavaScript for the bot check. Email{" "}
+              {site.contactEmail} to sign up instead.
+            </p>
+          </noscript>
           <script
             is:inline
             src="https://challenges.cloudflare.com/turnstile/v0/api.js"
@@ -74,3 +82,21 @@ const { workshop } = Astro.props;
     <FormUnavailable />
   )
 }
+
+<script>
+  // Stops a double click sending the signup twice. With the Worker, the second
+  // request would also fail the bot check, since a Turnstile token works once.
+  const buttons = () =>
+    document.querySelectorAll<HTMLButtonElement>(
+      "form[data-signup-form] button[type=submit]",
+    );
+  for (const form of document.querySelectorAll("form[data-signup-form]")) {
+    form.addEventListener("submit", () => {
+      for (const button of buttons()) button.disabled = true;
+    });
+  }
+  // The Back button can restore the page with the button still disabled.
+  window.addEventListener("pageshow", () => {
+    for (const button of buttons()) button.disabled = false;
+  });
+</script>

@@ -13,6 +13,24 @@ export function todayISO(timeZone: string, now: Date = new Date()): string {
   }).format(now);
 }
 
+/** The current date and time as YYYY-MM-DDTHH:MM, in the given IANA time zone. */
+export function nowISO(timeZone: string, now: Date = new Date()): string {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(now)
+      .map((part) => [part.type, part.value]),
+  );
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+}
+
 /**
  * "YYYY-MM-DD" -> "Sat, Sep 19, 2026".
  * Never parse the ISO string with `new Date(dateISO)` directly — that reads

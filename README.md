@@ -58,8 +58,10 @@ until step 4, so do that step last.
    - `TURNSTILE_SECRET_KEY`
 4. **Build variables** (next to the existing Web3Forms key):
    - `PUBLIC_TURNSTILE_SITE_KEY`
-   - `PUBLIC_SIGNUP_VIA_WORKER=true`
-5. Redeploy. The signup form now posts to `/api/signup` and shows the Turnstile check.
+   - `PUBLIC_SIGNUP_VIA_WORKER=true`, all lowercase. Any other value (`True`, `1`) fails the
+     whole site build.
+5. Redeploy. The signup form now posts to `/api/signup` and shows the Turnstile check. If any step 3
+   secret is missing, every signup gets an error until it's added.
 
 Locally: put the three secrets in `.dev.vars` and the build variables in `.env`, then `npm run
 build && npx wrangler dev`. Turnstile's

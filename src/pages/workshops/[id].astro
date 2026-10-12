@@ -5,7 +5,7 @@ import SignupForm from "../../components/SignupForm.astro";
 import StatusTag from "../../components/StatusTag.astro";
 import { site } from "../../config/site";
 import { formatDate, formatTimeRange } from "../../lib/date";
-import type { Workshop } from "../../lib/workshops";
+import { hasEnded, type Workshop } from "../../lib/workshops";
 
 export async function getStaticPaths() {
   const entries = await getCollection("workshops");
@@ -20,6 +20,9 @@ interface Props {
 }
 
 const { workshop } = Astro.props as Props;
+// Decided when the site builds, like the schedule: a past workshop's form stays
+// up until the next deploy.
+const ended = hasEnded(workshop, site.timeZone);
 ---
 
 <Base
@@ -47,7 +50,12 @@ const { workshop } = Astro.props as Props;
   <section class="panel">
     <div class="panel-title">&gt; SIGN UP</div>
     {
-      workshop.status === "open" ? (
+      ended ? (
+        <p class="muted">
+          This workshop has already happened. Email {site.contactEmail} to ask
+          about the next one.
+        </p>
+      ) : workshop.status === "open" ? (
         <SignupForm workshop={workshop} />
       ) : (
         <p class="muted">
