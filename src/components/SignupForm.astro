@@ -1,6 +1,11 @@
 ---
 import { FORM_ENDPOINTS, FORM_SUBJECTS } from "../config/forms";
-import { isFormsConfigured } from "../lib/env";
+import {
+  isFormsConfigured,
+  isSignupViaWorker,
+  turnstileSiteKey,
+} from "../lib/env";
+import Honeypot from "./Honeypot.astro";
 import Web3Fields from "./Web3Fields.astro";
 import FormUnavailable from "./FormUnavailable.astro";
 import type { Workshop } from "../lib/workshops";
@@ -13,8 +18,14 @@ const { workshop } = Astro.props;
 ---
 
 {
-  isFormsConfigured ? (
-    <form class="terminal-form" method="POST" action={FORM_ENDPOINTS.signup}>
+  isSignupViaWorker || isFormsConfigured ? (
+    <form
+      class="terminal-form"
+      method="POST"
+      action={
+        isSignupViaWorker ? FORM_ENDPOINTS.signupWorker : FORM_ENDPOINTS.signup
+      }
+    >
       <input type="hidden" name="workshop_id" value={workshop.id} />
       <input type="hidden" name="workshop_title" value={workshop.title} />
 
@@ -33,10 +44,27 @@ const { workshop } = Astro.props;
       <label for="notes">ANYTHING WE SHOULD KNOW?</label>
       <textarea id="notes" name="notes" rows={3} placeholder="> optional" />
 
-      <Web3Fields
-        subject={`${FORM_SUBJECTS.signup}: ${workshop.title}`}
-        redirectPath={`/thanks/?w=${workshop.id}`}
-      />
+      {isSignupViaWorker ? (
+        <>
+          <Honeypot />
+          <div
+            class="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+            data-theme="dark"
+          />
+          <script
+            is:inline
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async
+            defer
+          />
+        </>
+      ) : (
+        <Web3Fields
+          subject={`${FORM_SUBJECTS.signup}: ${workshop.title}`}
+          redirectPath={`/thanks/?w=${workshop.id}`}
+        />
+      )}
 
       <button class="button full" type="submit">
         [ SIGN UP ]

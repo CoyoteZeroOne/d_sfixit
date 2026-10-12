@@ -1,7 +1,7 @@
 # d_sfixit
 
 Community workshop + repair desk website. Astro, hosted free on Cloudflare, forms via
-[Web3Forms](https://web3forms.com).
+[Web3Forms](https://web3forms.com), plus a small Worker for signup emails (see below).
 
 ## Local dev
 
@@ -39,18 +39,34 @@ Kept here for reference — a new Cloudflare account or a fresh clone would need
 - **Cloudflare**: Workers & Pages → Import a repository → build command `npm run build` → add
   `NODE_VERSION=24` and the Web3Forms key as build variables → deploy. Afterward, set `SITE_URL` in
   `astro.config.mjs` to the real URL Cloudflare assigns.
-- **Custom domain** (optional, still free): buy one anywhere, point its DNS at Cloudflare, add it
-  as a custom domain on the Workers project.
+- **Custom domain** (optional, costs money each year): buy one anywhere, point its DNS at
+  Cloudflare, add it as a custom domain on the Workers project.
 
-## V2 roadmap
+## Signup emails (not switched on yet)
 
-This is a "V1": no backend code, no database. It ships fast and costs nothing, at the price of
-manual capacity tracking. If that becomes annoying, the natural next step ("V2") is:
+`src/worker.ts` can take signups instead of Web3Forms: it emails the organizer, then emails the
+person a receipt with a calendar link, via [Resend](https://resend.com). Signups keep going to Web3Forms
+until step 4, so do that step last.
 
-- Add a Cloudflare Worker + D1 (a small free SQLite database) to this same project.
-- Point `FORM_ENDPOINTS` in `src/config/forms.ts` at the new Worker routes instead of Web3Forms.
-- The Worker checks each workshop's real signup count against its `capacity` and rejects
-  over-capacity signups server-side, instead of relying on someone noticing and flipping `status`.
+1. **Domain**: Resend only sends from a domain you've verified, so `workers.dev` won't do. Add the
+   domain in Resend and create an API key.
+2. **Turnstile** (Cloudflare's free bot check): add a Turnstile widget for the site's domain in the
+   Cloudflare dashboard. It gives a site key and a secret key.
+3. **Worker secrets** (Workers project settings, as secrets, not build variables):
+   - `RESEND_API_KEY`
+   - `EMAIL_FROM`, e.g. `Ds FIXIT <signups@yourdomain.com>`
+   - `TURNSTILE_SECRET_KEY`
+4. **Build variables** (next to the existing Web3Forms key):
+   - `PUBLIC_TURNSTILE_SITE_KEY`
+   - `PUBLIC_SIGNUP_VIA_WORKER=true`
+5. Redeploy. The signup form now posts to `/api/signup` and shows the Turnstile check.
 
-Because the form field names were chosen to match what that Worker would expect, this upgrade is a
-change to `forms.ts` and a new Worker file — not a rewrite of the site.
+Locally: put the three secrets in `.dev.vars` and the build variables in `.env`, then `npm run
+build && npx wrangler dev`. Turnstile's
+[test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) work there.
+
+## Next step: capacity
+
+Capacity is still tracked by hand. To enforce it, add D1 (a small free SQLite database) to the
+Worker and have it count signups per workshop and reject them past `capacity`, instead of relying on
+someone noticing and flipping `status`.

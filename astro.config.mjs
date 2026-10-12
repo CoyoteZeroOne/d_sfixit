@@ -18,6 +18,16 @@ export default defineConfig({
         access: "public",
         optional: true,
       }),
+      PUBLIC_SIGNUP_VIA_WORKER: envField.boolean({
+        context: "client",
+        access: "public",
+        default: false,
+      }),
+      PUBLIC_TURNSTILE_SITE_KEY: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+      }),
     },
   },
 });

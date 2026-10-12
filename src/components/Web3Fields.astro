@@ -1,6 +1,7 @@
 ---
 import { site } from "../config/site";
 import { web3FormsAccessKey } from "../lib/env";
+import Honeypot from "./Honeypot.astro";
 
 interface Props {
   subject: string;
@@ -20,14 +21,7 @@ const redirectHref = new URL(redirectPath, Astro.site).href;
 <input type="hidden" name="subject" value={subject} />
 <input type="hidden" name="from_name" value={fromName} />
 <input type="hidden" name="redirect" id="w3f-redirect" value={redirectHref} />
-<input
-  type="checkbox"
-  name="botcheck"
-  class="hp-field"
-  tabindex="-1"
-  autocomplete="off"
-  aria-hidden="true"
-/>
+<Honeypot />
 
 <script>
   // Web3Forms requires an absolute redirect URL. `Astro.site` is fixed at

@@ -1,12 +1,11 @@
 /**
- * V1: forms POST straight to Web3Forms (a free third-party inbox-relay).
- * V2: swap these two constants for same-origin Worker routes (e.g. "/api/signup",
- * "/api/repair") once a Cloudflare Worker is added to this project — the HTML
- * form field names below are already chosen to match that future request body,
- * so no template changes are needed.
+ * Where each form sends its answers. Everything goes to Web3Forms (a free service
+ * that forwards form answers to your email), except signups once they're switched
+ * to this site's own Worker (src/worker.ts) — see "Signup emails" in the README.
  */
 export const FORM_ENDPOINTS = {
-  signup: "/api/signup",
+  signup: "https://api.web3forms.com/submit",
+  signupWorker: "/api/signup",
   repair: "https://api.web3forms.com/submit",
 } as const;
 
