@@ -6,7 +6,7 @@
  * so no template changes are needed.
  */
 export const FORM_ENDPOINTS = {
-  signup: "https://api.web3forms.com/submit",
+  signup: "/api/signup",
   repair: "https://api.web3forms.com/submit",
 } as const;
 
