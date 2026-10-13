@@ -1,35 +1,35 @@
 [
   {
-    "id": "tech-teardown-1",
-    "title": "Tech Teardown 1",
-    "date": "2026-10-11",
+    "id": "Lockpicking_Primer",
+    "title": "Lockpicking Primer",
+    "date": "2026-10-18",
     "startTime": "14:00",
     "endTime": "16:00",
-    "location": "Main Campus 416",
+    "location": "Main Campus 420 LOL",
     "capacity": 12,
     "status": "open",
-    "description": "Learn the tools and gestures of the cyberpunk- bring your own tools and devices, or don't! We have plenty. Come take stuff apart and don't worry aboout putting it back together."
+    "description": "follow me back to where it all began: picking locks. There is no skill that will serve you better when the going gets tough! Take a chance, roll the dice, set yourself free."
   },
   {
-    "id": "fdn-11010-intro-to-hacking",
-    "title": "FDN 11010 Intro to Hacking",
-    "date": "2026-10-16",
-    "startTime": "13:00",
-    "endTime": "15:30",
-    "location": "location undetermined- pending discussion",
-    "capacity": 12,
-    "status": "open",
-    "description": "Welcome, students, to your first [VARIABLE UNDEFINED] class. Here we will be having fun, sharing in the tradition of phreaks and g33ks the whole world over, pooling knowledge and learning how to reach into the nether world of software with a pair of boltcutters in hand. Come have fun with us! Today's subjects of study: breaking AI models, fake IDs in cyberspace, and beginner hardware hacking"
-  },
-  {
-    "id": "group-fixit",
+    "id": "group_fixit",
     "title": "Community FIXIT Forum",
-    "date": "2026-10-23",
+    "date": "2026-10-25",
     "startTime": "14:00",
     "endTime": "16:00",
-    "location": "location undetermined- pending discussion",
+    "location": "119",
     "capacity": 12,
     "status": "open",
     "description": "Join me and friends as we gather to create a no-judgement environment where you can come to learn how to fix things. Bring your broken shit and we'll see if we can't fix it together. Bring buddies and hang out but with screwdrivers and spitting in the face of consumerism also!"
+  },
+  {
+    "id": "september_hackpack",
+    "title": "SEPTEMBER HACKPACK ADDITION",
+    "date": "2026-11-01",
+    "startTime": "14:00",
+    "endTime": "16:00",
+    "location": "420-69",
+    "capacity": 12,
+    "status": "open",
+    "description": "IT'S FINALLY HERE! Friends, Romans, countrymen... I bring you, the Monthly Hackpack Add. You will leave this class with a dangerous gadget and the knowhow to use it, at no cost to you. Seize the day, bite the hand, HACK THE PLANET."
   }
 ]
