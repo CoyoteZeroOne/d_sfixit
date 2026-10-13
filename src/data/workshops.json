@@ -1,6 +1,6 @@
 [
   {
-    "id": "lockpicking_primer",
+    "id": "lockpicking-primer",
     "title": "Lockpicking Primer",
     "date": "2026-10-18",
     "startTime": "14:00",
@@ -11,7 +11,7 @@
     "description": "follow me back to where it all began: picking locks. There is no skill that will serve you better when the going gets tough! Take a chance, roll the dice, set yourself free."
   },
   {
-    "id": "group_fixit",
+    "id": "group-fixit",
     "title": "Community FIXIT Forum",
     "date": "2026-10-25",
     "startTime": "14:00",
@@ -22,7 +22,7 @@
     "description": "Join me and friends as we gather to create a no-judgement environment where you can come to learn how to fix things. Bring your broken shit and we'll see if we can't fix it together. Bring buddies and hang out but with screwdrivers and spitting in the face of consumerism also!"
   },
   {
-    "id": "september_hackpack",
+    "id": "september-hackpack",
     "title": "SEPTEMBER HACKPACK ADDITION",
     "date": "2026-11-01",
     "startTime": "14:00",
