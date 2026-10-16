@@ -1,13 +1,25 @@
 ---
 import Base from "../layouts/Base.astro";
 import { site } from "../config/site";
+import { isSignupViaWorker } from "../lib/env";
+
+const signupMessage = isSignupViaWorker
+  ? "You're signed up. Check your inbox for a confirmation email with the details and a calendar link."
+  : "You're signed up. I'll email you with anything else you need to know before the workshop.";
+const noReceiptMessage =
+  "You're signed up, but the confirmation email didn't send. I'll email you with anything else you need to know before the workshop.";
 ---
 
 <Base title={`THANKS // ${site.brand}`}>
   <section class="panel">
     <div class="prompt">&gt; REQUEST.RECEIVED</div>
     <h1>REQUEST RECEIVED.</h1>
-    <p id="thanks-body" class="muted">
+    <p
+      id="thanks-body"
+      class="muted"
+      data-signup={signupMessage}
+      data-no-receipt={noReceiptMessage}
+    >
       I got your message and will be in touch soon.
     </p>
     <a class="text-link" href="/">&lt;&lt; BACK HOME</a>
@@ -20,6 +32,8 @@ import { site } from "../config/site";
   const body = document.getElementById("thanks-body");
   if (workshopId && body) {
     body.textContent =
-      "You're signed up. I'll email you with anything else you need to know before the workshop.";
+      (params.get("receipt") === "failed"
+        ? body.dataset.noReceipt
+        : body.dataset.signup) ?? "";
   }
 </script>

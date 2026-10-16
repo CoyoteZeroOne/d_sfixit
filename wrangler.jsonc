@@ -1,4 +1,8 @@
 {
+  // Cloudflare hosting settings. The site's pages are built into ./dist, and
+  // src/worker.ts runs only for the signup form (/api/signup).
+  // The Worker's secrets (RESEND_API_KEY, EMAIL_FROM, TURNSTILE_SECRET_KEY) go in
+  // the Cloudflare dashboard — never in this file. See "Signup emails" in the README.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "d-sfixit",
   "main": "src/worker.ts",
@@ -7,5 +11,8 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
+    // Sends /api/... straight to the Worker. Without this line, submitting the
+    // signup form shows a blank "HTTP ERROR 405" page.
+    "run_worker_first": ["/api/*"],
   },
 }

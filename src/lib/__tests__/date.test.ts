@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { formatDate, formatTimeRange, todayISO } from "../date";
+import { formatDate, formatTimeRange, nowISO, todayISO } from "../date";
 
 describe("todayISO", () => {
   it("resolves the date in the given time zone, even across the UTC day boundary", () => {
@@ -7,6 +7,16 @@ describe("todayISO", () => {
     const now = new Date("2026-09-19T02:30:00Z");
     expect(todayISO("America/New_York", now)).toBe("2026-09-18");
     expect(todayISO("UTC", now)).toBe("2026-09-19");
+  });
+});
+
+describe("nowISO", () => {
+  it("gives the local date and 24-hour time in the given time zone", () => {
+    const now = new Date("2026-09-19T02:30:00Z");
+    expect(nowISO("America/New_York", now)).toBe("2026-09-18T22:30");
+    expect(nowISO("UTC", new Date("2026-09-19T00:05:00Z"))).toBe(
+      "2026-09-19T00:05",
+    );
   });
 });
 

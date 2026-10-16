@@ -1,5 +1,5 @@
 import type { CollectionEntry } from "astro:content";
-import { todayISO } from "./date";
+import { nowISO, todayISO } from "./date";
 
 export type Workshop = CollectionEntry<"workshops">["data"];
 
@@ -26,6 +26,15 @@ export function getNext(
   return getUpcoming(workshops, timeZone, now).find(
     (workshop) => workshop.status !== "cancelled",
   );
+}
+
+/** Whether the workshop's end time has passed in the given time zone. */
+export function hasEnded(
+  workshop: Pick<Workshop, "date" | "endTime">,
+  timeZone: string,
+  now: Date = new Date(),
+): boolean {
+  return `${workshop.date}T${workshop.endTime}` <= nowISO(timeZone, now);
 }
 
 function sortKey(workshop: Pick<Workshop, "date" | "startTime">): string {
