@@ -1,0 +1,34 @@
+
+name: Weekly workshop schedule refresh
+
+on:
+  schedule:
+    # Run at both possible UTC times for 2 PM Central.
+    - cron: "0 19 * * 0"
+    - cron: "0 20 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REDEPLOY_TOKEN }}
+
+      - name: Check Central time
+        id: clock
+        run: |
+          echo "hour=$(TZ=America/Chicago date +%H)" >> "$GITHUB_OUTPUT"
+
+      - name: Create scheduled commit
+        if: steps.clock.outputs.hour == '14' && github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "another successful class!"
+          git push
