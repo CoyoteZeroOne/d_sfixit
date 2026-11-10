@@ -1,14 +1,14 @@
 [
   {
-    "id": "fixit-forum-sewing-circle",
-    "title": "FIXIT Forum: Sewing Circle",
+    "id": "fixit-openmarket",
+    "title": "FIXIT Flea Market",
     "date": "2026-11-15",
     "startTime": "14:00",
     "endTime": "16:00",
     "location": "Main Campus 420 blaze it",
     "capacity": 12,
     "status": "open",
-    "description": "Do you have holes in your socks, like any true punk? how about a ripped out pocket? Today we're dedicating space to fixing all things sewing and sewing machine-related. Bring your sewables, or your expertise. Help and be helped!"
+    "description": "Need a new-old computer, or giant flatscreen TV? Come to FIXIT Flea Market and select from the choicest scrap. Free to claim, free to trade. Bring something to exchange, or just take what you need. Stick around and I might reveal the secrets of how to scavenge tech like the best of the best!"
   },
   {
     "id": "fdn11010-1",
