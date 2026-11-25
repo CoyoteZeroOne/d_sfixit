@@ -1,19 +1,8 @@
 [
   {
-    "id": "fixit-openmarket",
-    "title": "FIXIT Flea Market",
-    "date": "2026-11-15",
-    "startTime": "14:00",
-    "endTime": "16:00",
-    "location": "MCAD Main Campus Rm 420 blaze it",
-    "capacity": 12,
-    "status": "open",
-    "description": "Need a new-old computer, or giant flatscreen TV? Come to FIXIT Flea Market and select from the choicest FUNCTIONING, FAULT-FREE scrap. Free to claim, free to trade. Bring something to exchange, or just take what you need. Stick around and I might reveal the secrets of how to scavenge tech like the best of the best!"
-  },
-  {
     "id": "fdn11010-1",
     "title": "FDN 11010: Intro to Hacking",
-    "date": "2026-11-22",
+    "date": "2026-12-06",
     "startTime": "14:00",
     "endTime": "16:00",
     "location": "MCAD campus Rm 420",
@@ -22,14 +11,25 @@
     "description": "Welcome, students, to MCAD's underground course on HACKING. Today we'll be examining topical content that you might suddenly find yourself concerned with, like 'how to break AI models,' 'how to move through through the web without leaving a trace,' and an open session about what YOU want your computer to be ABLE TO DO."
   },
   {
-    "id": "dorking101",
+     "id": "dorking101",
     "title": "DORKING FOR DORKS",
-    "date": "2026-11-29",
+    "date": "2026-12-13",
     "startTime": "14:00",
     "endTime": "16:00",
     "location": "MCAD Main Campus Rm 420",
     "capacity": 12,
     "status": "open",
     "description": "Learn to use search engines to the fullest extent of their power. Find hidden sites and vulnerable interfaces, bypass firewalls and paywalls, sort out the useless from the useful. Learn to DORK!. [WARNING: you will never find a more useful tool for gathering scholarly articles, doing research effectively, or finding valuable information for free.]"
+  }
+  {
+    "id": "computersafety101",
+    "title": "Computer Safety 101",
+    "date": "2026-12-20",
+    "startTime": "14:00",
+    "endTime": "16:00",
+    "location": "MCAD Main Campus Rm 420",
+    "capacity": 12,
+    "status": "open",
+    "description": "do you own a computer? want to learn how to care for and feed it responsibly without all of my typical cringe hacker rhetoric? only interested in ensuring that predatory companies and offshore troll farms don't run a pig butchering scheme on you (google it)? then come visit me, and bring your computer! we'll get you hooked up with free antivirus and a refresher course on the basics of avoiding scams, shams, viruses, and planned obsolescence."
   }
 ]
